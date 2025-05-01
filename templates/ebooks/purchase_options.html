@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Purchase {{ ebook.title }} - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .purchase-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+    
+    .purchase-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .purchase-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .purchase-cover {
+        width: 150px;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+    
+    .payment-options {
+        margin-top: 2rem;
+    }
+    
+    .payment-method {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .payment-method:hover {
+        border-color: var(--primary-blue);
+        background: rgba(26, 86, 219, 0.05);
+    }
+    
+    .payment-method.active {
+        border-color: var(--primary-blue);
+        background: rgba(26, 86, 219, 0.05);
+    }
+    
+    .payment-icon {
+        font-size: 2rem;
+        margin-right: 1rem;
+        color: var(--primary-blue);
+    }
+    
+    .account-benefits {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+    }
+    
+    .benefit-item i {
+        color: var(--primary-blue);
+        margin-right: 0.8rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="purchase-container">
+    <div class="purchase-card">
+        <div class="purchase-header">
+            <img src="{{ ebook.cover_image.url }}" alt="{{ ebook.title }}" class="purchase-cover">
+            <h2>Purchase {{ ebook.title }}</h2>
+            <p class="text-muted">Complete your purchase to get instant access</p>
+            <h3 class="text-primary">KSh {{ ebook.price }}</h3>
+        </div>
+        
+        {% if is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <h5 class="mb-3">Payment Method</h5>
+                
+                <div class="payment-options">
+                    <div class="payment-method active">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <h5>M-Pesa</h5>
+                            <p class="text-muted small mb-0">Pay via M-Pesa mobile money</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                    <i class="fas fa-lock"></i> Complete Purchase
+                </button>
+            </form>
+            
+            <div class="account-benefits mt-4">
+                <h5><i class="fas fa-check-circle text-primary"></i> Benefits of your account:</h5>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Instant access after purchase</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Download history saved</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Special discounts for members</span>
+                </div>
+            </div>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <h5 class="mb-3">Enter Your Email</h5>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="alert alert-danger mt-2">
+                        {{ form.email.errors.0 }}
+                    </div>
+                {% endif %}
+                
+                <div class="payment-options mt-4">
+                    <h5 class="mb-3">Payment Method</h5>
+                    
+                    <div class="payment-method active">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <h5>M-Pesa</h5>
+                            <p class="text-muted small mb-0">Pay via M-Pesa mobile money</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                    <i class="fas fa-lock"></i> Complete Purchase
+                </button>
+            </form>
+            
+            <div class="account-benefits mt-4">
+                <h5><i class="fas fa-user-plus text-primary"></i> Why create an account?</h5>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Faster checkout next time</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Access your eBooks anytime</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Get exclusive member discounts</span>
+                </div>
+                
+                <a href="{% url 'register' %}?next={% url 'purchase_options' ebook.slug %}" class="btn btn-outline-primary w-100 mt-3">
+                    Create Free Account
+                </a>
+                
+                <p class="text-center small mt-2">
+                    Already have an account? <a href="{% url 'login' %}?next={% url 'purchase_options' ebook.slug %}">Login here</a>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

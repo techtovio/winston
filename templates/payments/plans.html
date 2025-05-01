@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pricing Plans | In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/flatpickr.min.css' %}" rel="stylesheet">
+<style>
+    .pricing-section {
+        background-color: #f8f9fa;
+    }
+    
+    .plan-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .plan-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .plan-card .card-header {
+        border-bottom: none;
+        padding: 2rem 1.5rem;
+    }
+    
+    .popular-plan {
+        border: 2px solid var(--primary);
+    }
+    
+    .popular-badge {
+        top: -10px;
+        right: 20px;
+        font-size: 0.8rem;
+        padding: 0.35rem 0.75rem;
+    }
+    
+    .feature-list {
+        min-height: 220px;
+    }
+    
+    .feature-list li {
+        margin-bottom: 0.75rem;
+        padding-left: 1.75rem;
+        position: relative;
+    }
+    
+    .feature-list li .feature-icon {
+        position: absolute;
+        left: 0;
+        top: 0.2rem;
+        color: var(--primary);
+    }
+    
+    .feature-list li.disabled {
+        color: #adb5bd;
+    }
+    
+    .feature-list li.disabled .feature-icon {
+        color: #adb5bd;
+    }
+    
+    .local-prices {
+        font-size: 0.85rem;
+    }
+    
+    .money-back-guarantee {
+        background-color: white;
+        border-radius: 50px;
+        padding: 0.5rem 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    @media (max-width: 768px) {
+        .plan-card {
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            min-height: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container text-center py-4">
+        <h1 class="display-4 fw-bold mb-3">Choose Your Perfect Plan</h1>
+        <p class="lead mb-4">Simple, transparent pricing tailored for your needs</p>
+        <div class="d-flex justify-content-center gap-2">
+            <span class="badge bg-white text-primary px-3 py-2">30-Day Money Back Guarantee</span>
+            <span class="badge bg-white text-primary px-3 py-2">Secure Payment</span>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Plans Section -->
+<section class="pricing-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2">FLEXIBLE PLANS</span>
+            <h2 class="mb-3">Simple, Transparent Pricing</h2>
+            <p class="text-muted">Choose the perfect plan for your needs</p>
+        </div>
+      
+        <div class="row g-4 justify-content-center">
+            {% for plan in plans %}
+            <div class="col-lg-4 col-md-6">
+                <div class="plan-card card h-100 border-0 shadow-sm {% if forloop.counter == 2 %}popular-plan{% endif %}">
+                    <div class="card-header bg-white text-center position-relative">
+                        {% if forloop.counter == 2 %}
+                        <span class="popular-badge badge bg-primary text-white position-absolute">MOST POPULAR</span>
+                        {% endif %}
+                        <h4 class="fw-bold">{{ plan.name }}</h4>
+                        <div class="price-display my-3">
+                            <span class="h2 fw-bold text-primary">${{ plan.usd_price }}</span>
+                            <div class="text-muted local-prices mt-2">
+                                <span>KES {{ plan.kes_price }}</span> · 
+                                <span>TZS {{ plan.tzs_price }}</span> · 
+                                <span>UGX {{ plan.ugx_price }}</span>
+                            </div>
+                        </div>
+                        <button class="btn {% if forloop.counter == 2 %}btn-primary{% else %}btn-outline-primary{% endif %} w-100"
+                                data-plan-id="{{ plan.id }}"
+                                data-plan-name="{{ plan.name }}"
+                                data-plan-price="${{ plan.usd_price }}"
+                                data-local-prices="KES {{ plan.kes_price }} · TZS {{ plan.tzs_price }} · UGX {{ plan.ugx_price }}">
+                            Get Started
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <ul class="feature-list list-unstyled">
+                            {% for feature in plan.features_as_list %}
+                            <li {% if forloop.counter > 3 and forloop.first %}class="disabled"{% endif %}>
+                                <i class="fas {% if forloop.counter > 3 and forloop.first %}fa-times{% else %}fa-check{% endif %} feature-icon"></i>
+                                {{ feature }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+      
+        <div class="text-center mt-5 pt-3">
+            <div class="money-back-guarantee d-inline-block">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-shield-alt text-primary me-3 fs-4"></i>
+                    <div>
+                        <p class="mb-0 fw-medium">30-Day Money Back Guarantee</p>
+                        <small class="text-muted">If you're not satisfied, we'll refund your payment.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Frequently Asked Questions</h2>
+            <p class="text-muted">Find answers to common questions about our plans</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                What payment methods do you accept?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We accept M-Pesa (Kenya, Tanzania), Airtel Money (East Africa), and all major credit/debit cards (Visa, Mastercard, American Express).
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                Can I upgrade or downgrade my plan later?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, you can change your plan at any time. When you upgrade, you'll get prorated credit for the unused portion of your current plan.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Is there a free trial available?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We don't offer a free trial, but we have a 30-day money-back guarantee. If you're not satisfied with your purchase, you can request a full refund within 30 days.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Complete Your Purchase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="paymentForm" action="{% url 'initiate_payment' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan_id" id="modalPlanId">
+                    
+                    <div class="text-center mb-4">
+                        <h6 class="fw-bold">You're purchasing: <span class="text-primary" id="modalPlanName"></span></h6>
+                        <h4 class="fw-bold my-3" id="modalPlanPrice"></h4>
+                        <p class="text-muted" id="modalLocalPrices"></p>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                        <!-- Authenticated User Flow -->
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number (for payment confirmation)</label>
+                            <div class="input-group">
+                                <select class="form-select flex-grow-0 w-auto" name="country_code" required style="max-width: 120px;">
+                                    <option value="+254">Kenya (+254)</option>
+                                    <option value="+255">Tanzania (+255)</option>
+                                    <option value="+256">Uganda (+256)</option>
+                                    <option value="+257">Rwanda (+257)</option>
+                                    <option value="+250">Burundi (+250)</option>
+                                </select>
+                                <input type="tel" class="form-control" name="phone_number" placeholder="7XX XXX XXX" required>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Guest User Flow -->
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <div class="input-group">
+                                <select class="form-select flex-grow-0 w-auto" name="country_code" required style="max-width: 120px;">
+                                    <option value="+254">Kenya (+254)</option>
+                                    <option value="+255">Tanzania (+255)</option>
+                                    <option value="+256">Uganda (+256)</option>
+                                    <option value="+257">Rwanda (+257)</option>
+                                    <option value="+250">Burundi (+250)</option>
+                                </select>
+                                <input type="tel" class="form-control" name="phone_number" placeholder="7XX XXX XXX" required>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Payment Method</label>
+                        <div class="d-flex flex-column gap-2">
+                            {% for method in payment_methods %}
+                            <button type="button" class="btn btn-outline-dark text-start d-flex align-items-center payment-method-btn"
+                                    data-method="{{ method.value }}">
+                                <img src="{% static method.icon %}" alt="{{ method.label }}" class="me-3" width="30">
+                                {{ method.label }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="payment_method" id="selectedPaymentMethod" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold" id="submitPaymentBtn">
+                        Complete Payment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/flatpickr.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up plan buttons
+    document.querySelectorAll('[data-plan-id]').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('modalPlanId').value = this.dataset.planId;
+            document.getElementById('modalPlanName').textContent = this.dataset.planName;
+            document.getElementById('modalPlanPrice').textContent = this.dataset.planPrice;
+            document.getElementById('modalLocalPrices').textContent = this.dataset.localPrices;
+            
+            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            modal.show();
+        });
+    });
+    
+    // Handle payment method selection
+    document.querySelectorAll('.payment-method-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-primary');
+                btn.classList.add('border');
+            });
+            this.classList.add('active', 'border-primary');
+            this.classList.remove('border');
+            document.getElementById('selectedPaymentMethod').value = this.dataset.method;
+        });
+    });
+    
+    // Handle form submission
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitPaymentBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = data.redirect_url;
+            } else {
+                showAlert('Payment Failed', data.message || 'There was an error processing your payment. Please try again.', 'danger');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Complete Payment';
+            }
+        })
+        .catch(error => {
+            showAlert('Error', 'An unexpected error occurred. Please try again.', 'danger');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Complete Payment';
+        });
+    });
+    
+    function showAlert(title, message, type) {
+        // Implement your alert/notification system here
+        alert(`${title}: ${message}`);
+    }
+});
+</script>
+{% endblock %}

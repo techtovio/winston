@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}About Wynston A. Wilson | Putting Customers First{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* About Hero */
+  .about-hero {
+    background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(30, 64, 175, 0.9)),
+                url('wynston-speaking.jpg') center/cover;
+    color: white;
+    padding: 8rem 5% 4rem;
+    text-align: center;
+  }
+
+  /* Bio Section */
+  .bio-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding: 5rem 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .bio-image {
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .bio-content h2 {
+    color: var(--dark-blue);
+    margin-bottom: 1.5rem;
+  }
+
+  .bio-highlights {
+    margin-top: 2rem;
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .highlight-icon {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .bio-section {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- About Hero -->
+  <section class="about-hero animate__animated animate__fadeIn">
+    <h1>Meet Wynston A. Wilson, M.Ed.</h1>
+    <p class="subtitle">Africa's Conversion Coach | Sales Strategist | Customer Experience Expert</p>
+  </section>
+
+  <!-- Bio Section -->
+  <section class="bio-section">
+    <div class="bio-image-container">
+      <img src="wynston-profile.jpg" alt="Wynston Wilson" class="bio-image">
+    </div>
+    <div class="bio-content">
+      <h2>Transforming Sales Across East Africa</h2>
+      <p>With over 15 years of experience in sales training and customer experience optimization, Wynston has helped 200+ organizations in Kenya, Uganda, and Tanzania dramatically improve their conversion rates.</p>
+      
+      <div class="bio-highlights">
+        <div class="highlight-item">
+          <div class="highlight-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div>
+            <h4>M.Ed. in Organizational Leadership</h4>
+            <p>Harvard University, 2012</p>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <h4>Tripled Conversions</h4>
+            <p>For 87% of client organizations</p>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <h4>Based in Nairobi</h4>
+            <p>Serving East Africa since 2010</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="#contact" class="btn">Get in Touch</a>
+    </div>
+  </section>
+
+  <!-- Methodology Section -->
+  <section class="methodology-section">
+    <h2 class="section-title">The 21 Principles Methodology</h2>
+    <div class="principles-grid">
+      <!-- Repeat for each principle -->
+      <div class="principle-card">
+        <div class="principle-number">01</div>
+        <h3>Listen First, Sell Second</h3>
+        <p>Discover the 3:1 listening ratio that increases conversions by 40%</p>
+      </div>
+      <!-- ... -->
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}eBooks - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ebooks-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+    
+    .category-filter {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .category-badge {
+        display: inline-flex;
+        align-items: center;
+        margin: 0.3rem;
+        padding: 0.7rem 1.2rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        color: var(--dark);
+        text-decoration: none;
+        transition: all 0.3s;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .category-badge:hover, .category-badge.active {
+        background: var(--primary-blue);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(26, 86, 219, 0.2);
+    }
+    
+    .category-badge i {
+        margin-right: 8px;
+        font-size: 1.1rem;
+    }
+    
+    .ebook-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        margin-bottom: 2rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ebook-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .ebook-cover {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .ebook-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ebook-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+    
+    .ebook-author {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .ebook-meta {
+        display: flex;
+        justify-content: space-between;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .ebook-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin: 1rem 0;
+    }
+    
+    .featured-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #f59e0b;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 1;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 0;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--light-blue);
+        margin-bottom: 1rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ebooks-container">
+    <div class="section-header">
+        <h1>Sales Training eBooks</h1>
+        <a href="{% url 'featured_ebooks' %}" class="btn btn-outline-primary">View Featured</a>
+    </div>
+    
+    <div class="category-filter">
+        <h5 class="mb-3">Browse by Category</h5>
+        <a href="{% url 'ebook_list' %}" class="category-badge {% if not selected_category %}active{% endif %}">
+            <i class="fas fa-th"></i> All Categories
+        </a>
+        {% for category in categories %}
+            <a href="{% url 'ebooks_by_category' category.id %}" 
+               class="category-badge {% if selected_category == category.id %}active{% endif %}"
+               style="{% if selected_category == category.id %}background: {{ category.color }}; border-color: {{ category.color }};{% endif %}">
+                <i class="{{ category.icon }}"></i>
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+    
+    {% if page_obj.object_list %}
+        <div class="row">
+            {% for ebook in page_obj.object_list %}
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="ebook-card">
+                        {% if ebook.is_featured %}
+                            <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                        {% endif %}
+                        <img src="{{ ebook.cover_image.url }}" alt="{{ ebook.title }}" class="ebook-cover">
+                        <div class="ebook-body">
+                            <h3 class="ebook-title">{{ ebook.title }}</h3>
+                            <p class="ebook-author">By {{ ebook.author }}</p>
+                            <div class="ebook-meta">
+                                <span><i class="fas fa-book-open"></i> {{ ebook.pages }} pages</span>
+                                <span><i class="far fa-calendar-alt"></i> {{ ebook.publish_date|date:"M Y" }}</span>
+                            </div>
+                            <div class="ebook-price">KSh {{ ebook.price }}</div>
+                            <a href="{% url 'ebook_detail' ebook.slug %}" class="btn btn-primary mt-auto">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-book-open"></i>
+            <h3>No eBooks Available</h3>
+            <p class="text-muted">We couldn't find any eBooks matching your criteria.</p>
+            <a href="{% url 'ebook_list' %}" class="btn btn-primary mt-3">Browse All eBooks</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

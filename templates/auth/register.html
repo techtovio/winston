@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .password-strength {
+        height: 5px;
+        margin-top: 5px;
+        background: #e9ecef;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    
+    .password-strength-bar {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .user-type-radio {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .form-check-label {
+        padding-left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="text-center mb-4">Create Your Account</h2>
+    
+    <form method="post" id="registerForm">
+        {% csrf_token %}
+        
+        <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+                <label for="id_first_name" class="form-label">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.first_name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="id_last_name" class="form-label">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.last_name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_email" class="form-label">Email Address</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.email.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_phone_number" class="form-label">Phone Number</label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.phone_number.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">I am registering as:</label>
+            <div class="user-type-radio">
+                {% for choice in form.user_type %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                            {{ choice.choice_label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-3" id="organizationNameField" style="display: none;">
+            <label for="id_organization_name" class="form-label">Organization Name</label>
+            {{ form.organization_name }}
+            {% if form.organization_name.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.organization_name.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_password1" class="form-label">Password</label>
+            {{ form.password1 }}
+            <div class="password-strength mt-2">
+                <div class="password-strength-bar" id="passwordStrengthBar"></div>
+            </div>
+            <small class="text-muted">{{ form.password1.help_text }}</small>
+            {% if form.password1.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.password1.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-4">
+            <label for="id_password2" class="form-label">Confirm Password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.password2.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+        </div>
+        
+        <div class="text-center mt-3">
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Show/hide organization name field based on user type
+    document.querySelectorAll('input[name="user_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const orgField = document.getElementById('organizationNameField');
+            if (this.value === 'organization' || this.value === 'government') {
+                orgField.style.display = 'block';
+            } else {
+                orgField.style.display = 'none';
+            }
+        });
+        
+        // Trigger change event on page load if organization/government is selected
+        if (radio.checked && (radio.value === 'organization' || radio.value === 'government')) {
+            document.getElementById('organizationNameField').style.display = 'block';
+        }
+    });
+    
+    // Password strength indicator
+    document.getElementById('id_password1').addEventListener('input', function() {
+        const password = this.value;
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        let strength = 0;
+        
+        // Check password length
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+        
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) strength += 1;
+        
+        // Check for lowercase letters
+        if (/[a-z]/.test(password)) strength += 1;
+        
+        // Check for numbers
+        if (/[0-9]/.test(password)) strength += 1;
+        
+        // Check for special characters
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        
+        // Update strength bar
+        let width = 0;
+        let color = '#dc3545'; // red
+        
+        if (strength <= 2) {
+            width = 33;
+            color = '#dc3545'; // red
+        } else if (strength <= 4) {
+            width = 66;
+            color = '#fd7e14'; // orange
+        } else {
+            width = 100;
+            color = '#28a745'; // green
+        }
+        
+        strengthBar.style.width = width + '%';
+        strengthBar.style.backgroundColor = color;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ ebook.title }} - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ebook-detail-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+    
+    .ebook-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .ebook-cover-container {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .ebook-cover {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .ebook-info {
+        flex: 2;
+        min-width: 300px;
+    }
+    
+    .ebook-title {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+    
+    .ebook-author {
+        font-size: 1.2rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+    
+    .ebook-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #64748b;
+    }
+    
+    .ebook-price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin: 1.5rem 0;
+    }
+    
+    .ebook-description {
+        line-height: 1.8;
+        margin-bottom: 2rem;
+    }
+    
+    .preview-btn {
+        margin-right: 1rem;
+    }
+    
+    .featured-badge {
+        background: #f59e0b;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    .related-ebooks {
+        margin-top: 4rem;
+    }
+    
+    .related-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        height: 100%;
+    }
+    
+    .related-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .related-thumbnail {
+        height: 150px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .related-body {
+        padding: 1rem;
+    }
+    
+    .category-badge {
+        display: inline-flex;
+        align-items: center;
+        margin: 0.3rem 0.3rem 0.3rem 0;
+        padding: 0.3rem 0.8rem;
+        background: #f8fafc;
+        border-radius: 20px;
+        color: var(--dark);
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+        font-size: 0.8rem;
+    }
+    
+    .category-badge i {
+        margin-right: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ebook-detail-container">
+    {% if ebook.is_featured %}
+        <span class="featured-badge"><i class="fas fa-star"></i> Featured eBook</span>
+    {% endif %}
+    
+    <div class="ebook-header">
+        <div class="ebook-cover-container">
+            <img src="{{ ebook.cover_image.url }}" alt="{{ ebook.title }}" class="ebook-cover">
+        </div>
+        
+        <div class="ebook-info">
+            <h1 class="ebook-title">{{ ebook.title }}</h1>
+            <p class="ebook-author">By {{ ebook.author }}</p>
+            
+            <div class="ebook-meta">
+                <span><i class="fas fa-book-open"></i> {{ ebook.pages }} pages</span>
+                <span><i class="far fa-calendar-alt"></i> Published {{ ebook.publish_date|date:"M Y" }}</span>
+                <span><i class="fas fa-tags"></i> 
+                    {% for category in ebook.categories.all %}
+                        <span class="category-badge" style="border-color: {{ category.color }};">
+                            <i class="{{ category.icon }}"></i> {{ category.name }}
+                        </span>
+                    {% endfor %}
+                </span>
+            </div>
+            
+            <div class="ebook-price">KSh {{ ebook.price }}</div>
+            
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                {% if ebook.preview_file %}
+                    <a href="{{ ebook.preview_file.url }}" class="btn btn-outline-primary preview-btn" target="_blank">
+                        <i class="fas fa-eye"></i> Preview
+                    </a>
+                {% endif %}
+                <a href="{% url 'purchase_options' ebook.slug %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i> Purchase Now
+                </a>
+            </div>
+            
+            <div class="ebook-description">
+                {{ ebook.description|linebreaks }}
+            </div>
+        </div>
+    </div>
+    
+    {% if related_ebooks %}
+        <div class="related-ebooks">
+            <h3 class="mb-4">You Might Also Like</h3>
+            <div class="row">
+                {% for related in related_ebooks %}
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <a href="{% url 'ebook_detail' related.slug %}" class="related-card">
+                            <img src="{{ related.cover_image.url }}" alt="{{ related.title }}" class="related-thumbnail">
+                            <div class="related-body">
+                                <h5>{{ related.title }}</h5>
+                                <p class="text-muted small mb-1">By {{ related.author }}</p>
+                                <p class="text-primary fw-bold">KSh {{ related.price }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

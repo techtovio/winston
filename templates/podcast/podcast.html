@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Podcasts - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .podcast-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+    
+    .category-filter {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .category-badge {
+        display: inline-block;
+        margin: 0.3rem;
+        padding: 0.5rem 1rem;
+        background: #f1f5f9;
+        border-radius: 20px;
+        color: var(--dark);
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .category-badge:hover, .category-badge.active {
+        background: var(--primary-blue);
+        color: white;
+    }
+    
+    .category-badge i {
+        margin-right: 5px;
+    }
+    
+    .podcast-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        margin-bottom: 2rem;
+    }
+    
+    .podcast-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .podcast-thumbnail {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .podcast-body {
+        padding: 1.5rem;
+    }
+    
+    .podcast-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+    
+    .podcast-meta {
+        display: flex;
+        justify-content: space-between;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .premium-badge {
+        background: #f59e0b;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .podcast-description {
+        color: #64748b;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .subscription-required {
+        position: relative;
+    }
+    
+    .subscription-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 0;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--light-blue);
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="podcast-container">
+    <h1 class="text-center mb-4">Sales Training Podcasts</h1>
+    
+    <div class="category-filter">
+        <h5 class="mb-3">Filter by Category</h5>
+        <a href="{% url 'podcast_list' %}" class="category-badge {% if not selected_category %}active{% endif %}">
+            <i class="fas fa-list"></i> All Categories
+        </a>
+        {% for category in categories %}
+            <a href="{% url 'podcast_list' %}?category={{ category.id }}" 
+               class="category-badge {% if selected_category == category.id %}active{% endif %}">
+                {% if category.icon %}<i class="{{ category.icon }}"></i>{% endif %}
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+    
+    {% if page_obj.object_list %}
+        <div class="row">
+            {% for podcast in page_obj.object_list %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="podcast-card">
+                        <img src="{{ podcast.thumbnail.url }}" alt="{{ podcast.title }}" class="podcast-thumbnail">
+                        <div class="podcast-body">
+                            <h3 class="podcast-title">{{ podcast.title }}</h3>
+                            <div class="podcast-meta">
+                                <span><i class="far fa-clock"></i> {{ podcast.duration }}</span>
+                                <span><i class="far fa-calendar-alt"></i> {{ podcast.publish_date|date:"M d, Y" }}</span>
+                            </div>
+                            {% if podcast.is_premium %}
+                                <span class="premium-badge"><i class="fas fa-crown"></i> Premium</span>
+                            {% endif %}
+                            <p class="podcast-description">{{ podcast.description }}</p>
+                            <a href="{% url 'podcast_detail' podcast.pk %}" class="btn btn-primary btn-sm">Listen Now</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-podcast"></i>
+            <h3>No Podcasts Available</h3>
+            <p class="text-muted">We couldn't find any podcasts matching your criteria.</p>
+            {% if not has_subscription %}
+                <a href="{% url 'subscription_plans' %}" class="btn btn-primary mt-3">Subscribe to Access Premium Content</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

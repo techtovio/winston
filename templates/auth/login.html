@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .login-options {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    .social-login {
+        margin-top: 2rem;
+        text-align: center;
+    }
+    
+    .social-login .btn {
+        margin: 0.5rem;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="text-center mb-4">Welcome Back</h2>
+    
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Invalid email or password. Please try again.
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id_username" class="form-label">Email Address</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.username.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_password" class="form-label">Password</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.password.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        </div>
+        
+        <div class="login-options">
+            <a href="{% url 'password_reset' %}">Forgot password?</a>
+            <a href="{% url 'register' %}">Create account</a>
+        </div>
+    </form>
+    
+    <div class="social-login">
+        <p class="text-muted">Or login with</p>
+        <a href="#" class="btn btn-outline-primary"><i class="fab fa-google"></i></a>
+        <a href="#" class="btn btn-outline-primary"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="btn btn-outline-primary"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+</div>
+{% endblock %}

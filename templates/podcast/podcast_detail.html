@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ podcast.title }} - In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<style>
+    .podcast-detail-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+    
+    .podcast-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .podcast-thumbnail {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .podcast-meta {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        color: #64748b;
+        margin-bottom: 1rem;
+    }
+    
+    .audio-player {
+        width: 100%;
+        margin: 2rem 0;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .related-podcasts {
+        margin-top: 3rem;
+    }
+    
+    .related-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        height: 100%;
+    }
+    
+    .related-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .related-thumbnail {
+        height: 120px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .related-body {
+        padding: 1rem;
+    }
+    
+    .premium-badge {
+        background: #f59e0b;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="podcast-detail-container">
+    <div class="podcast-header">
+        {% if podcast.is_premium %}
+            <span class="premium-badge"><i class="fas fa-crown"></i> Premium Content</span>
+        {% endif %}
+        <h1>{{ podcast.title }}</h1>
+        <div class="podcast-meta">
+            <span><i class="far fa-clock"></i> {{ podcast.duration }}</span>
+            <span><i class="far fa-calendar-alt"></i> {{ podcast.publish_date|date:"M d, Y" }}</span>
+            <span><i class="fas fa-headphones"></i> {{ podcast.categories.all|join:", " }}</span>
+        </div>
+        <img src="{{ podcast.thumbnail.url }}" alt="{{ podcast.title }}" class="podcast-thumbnail">
+    </div>
+    
+    <audio controls class="audio-player">
+        <source src="{{ podcast.audio_file.url }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div class="podcast-description">
+        <h4>About This Episode</h4>
+        <p>{{ podcast.description|linebreaks }}</p>
+    </div>
+    
+    {% if related_podcasts %}
+        <div class="related-podcasts">
+            <h3 class="mb-4">More Episodes You Might Like</h3>
+            <div class="row">
+                {% for related in related_podcasts %}
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <a href="{% url 'podcast_detail' related.pk %}" class="related-card">
+                            <img src="{{ related.thumbnail.url }}" alt="{{ related.title }}" class="related-thumbnail">
+                            <div class="related-body">
+                                <h5>{{ related.title }}</h5>
+                                <small class="text-muted">{{ related.publish_date|date:"M d, Y" }}</small>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

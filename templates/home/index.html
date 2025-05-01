@@ -1,0 +1,1529 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<style>
+  .about-section {
+      background-color: #f8f9fa;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+  }
+  
+  .about-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(26, 86, 219, 0.05) 0%, rgba(26, 86, 219, 0.01) 100%);
+      z-index: 0;
+  }
+  
+  .logo-container {
+      position: relative;
+      background: white;
+      border-radius: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+  }
+  
+  .logo-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo-img {
+      border-radius: 10px;
+      padding: 15px;
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .logo-badge {
+      position: relative;
+      z-index: 1;
+  }
+  
+  @media (max-width: 992px) {
+      .about-section::before {
+          width: 100%;
+          height: 40%;
+          top: auto;
+          bottom: 0;
+      }
+  }
+</style>
+
+
+<!-- Styles for the gallery section -->
+<style>
+    .photo-overlay {
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .card:hover .photo-overlay {
+        opacity: 1;
+    }
+    
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>
+<style>
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+  }
+  
+  .btn-accent {
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    transition: all 0.3s;
+  }
+  
+  .btn-accent:hover {
+    background-color: #e65a00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  
+  .btn-light {
+    background-color: white;
+    color: var(--dark-blue);
+    transition: all 0.3s;
+  }
+  
+  .btn-light:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .btn-outline-light {
+    border: 2px solid white;
+    transition: all 0.3s;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  
+  .trust-badges {
+    opacity: 0.9;
+  }
+  
+  .badge-item {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+        gap: 15px !important;
+    }
+    
+    .btn, .btn-lg {
+        width: 100%;
+    }
+    
+    .trust-badges {
+        flex-direction: column;
+        gap: 15px !important;
+        text-align: center;
+    }
+    
+    .badge-item {
+        font-size: 1rem;
+    }
+  }
+  </style>
+
+<style>
+  .connect-section {
+    background: linear-gradient(135deg, var(--dark-blue), #1a365d);
+  }
+  
+  .social-icon {
+    color: white;
+    background: rgba(255,255,255,0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    background: var(--accent);
+    transform: translateY(-3px);
+  }
+  
+  .contact-item a {
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  .contact-item a:hover {
+    color: var(--light-blue) !important;
+  }
+  
+  .location-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 8px 15px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .btn-accent {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+  }
+  
+  .btn-accent:hover {
+    background-color: #e65a00;
+  }
+  
+  @media (max-width: 768px) {
+    .location-badge {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .newsletter form {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .newsletter input {
+        width: 100%;
+        max-width: 100% !important;
+    }
+  }
+  </style>
+      
+<style>
+  .testimonials-section {
+    background-color: var(--off-white);
+  }
+  
+  .testimonial-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .testimonial-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
+  }
+  
+  blockquote {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 20px;
+  }
+  
+  blockquote::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--light-blue);
+  }
+  
+  .client-badge {
+    flex-shrink: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .testimonial-card {
+        padding: 25px;
+    }
+    
+    blockquote {
+        font-size: 1rem;
+    }
+  }
+  </style>
+
+<style>
+  /* Payment Section Styles */
+  .payment-section {
+    background-color: var(--off-white);
+  }
+  
+  .payment-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .payment-methods {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .method-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .method-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .payment-btn {
+    padding: 12px 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: all 0.3s;
+  }
+  
+  .payment-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  
+  .delivery-info {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.95rem;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .payment-card {
+        padding: 30px 20px;
+    }
+    
+    .payment-btn {
+        width: 100%;
+        padding: 12px;
+    }
+  }
+  </style>
+
+
+<style>
+  /* Base Styles */
+  .pre-order-responsive {
+    color: white;
+    overflow: hidden;
+  }
+  
+  .bg-gradient-blue {
+    background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+  }
+  
+  /* eBook Cover Styles */
+  .ebook-cover-desktop {
+    flex: 0 0 auto;
+    position: relative;
+  }
+  
+  .ebook-cover-desktop img {
+    transform: perspective(1000px) rotateY(-10deg);
+    transition: transform 0.5s ease;
+  }
+  
+  .ebook-cover-desktop:hover img {
+    transform: perspective(1000px) rotateY(-5deg) scale(1.03);
+  }
+  
+  /* Price Display */
+  .price-display {
+    background: rgba(255,255,255,0.15);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .current-price {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .price-comparison span {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .original-price {
+    background: rgba(0, 0, 0, 0.418);
+    text-decoration: line-through;
+  }
+  
+  .digital-price {
+    background: rgb(17, 15, 114);
+    font-weight: 600;
+  }
+  
+  /* Features */
+  .features-container {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  .features-scroller {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .features-scroller::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  .feature-item {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 120px;
+    transition: all 0.3s ease;
+  }
+  
+  .feature-item:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-3px);
+  }
+  
+  .feature-item i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: var(--light-blue);
+    display: block;
+  }
+  
+  .feature-item p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  /* CTA Button */
+  .pre-order-btn {
+    padding: 12px 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: all 0.3s;
+  }
+  
+  .pre-order-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  }
+  
+  /* Guarantee Badge */
+  .guarantee-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+  }
+  
+  /* Animations */
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .ebook-cover-desktop img {
+        max-width: 220px;
+    }
+    
+    .current-price {
+        font-size: 1.8rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .pre-order-content {
+        text-align: center;
+    }
+    
+    .price-comparison {
+        flex-direction: column;
+        gap: 5px !important;
+    }
+    
+    .feature-item {
+        min-width: 110px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .current-price {
+        font-size: 1.6rem;
+    }
+    
+    .pre-order-btn {
+        width: 100%;
+        padding: 12px;
+    }
+  }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+
+
+
+
+<style>
+  .service-card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform 0.3s ease;
+  }
+  
+  .service-card:hover {
+      transform: translateY(-5px);
+  }
+  
+  .service-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+  }
+  
+  .service-card h3 {
+      color: var(--dark-blue);
+      font-size: 1.2rem;
+  }
+  
+  @media (max-width: 768px) {
+      .service-card {
+          padding: 20px;
+      }
+  }
+</style>
+<style>
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .gallery-item:hover {
+    transform: translateY(-5px);
+  }
+  .gallery-caption {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 1rem;
+    transition: bottom 0.3s;
+  }
+  .gallery-item:hover .gallery-caption {
+    bottom: 0;
+  }
+  </style>
+<style>
+    .stat-card {
+        border-left: 4px solid var(--accent);
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .method-step {
+        text-align: center;
+        padding: 30px 15px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        background-color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .method-step:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .method-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--accent);
+    }
+    
+    .client-logo {
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        max-height: 60px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    .client-logo:hover {
+        filter: grayscale(0);
+        opacity: 1;
+    }
+    
+    .testimonial-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    
+    .testimonial-video {
+        background: #eee;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        color: var(--primary);
+    }
+    
+    .pricing-card {
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .pricing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .pricing-header {
+        background-color: var(--primary);
+        color: white;
+        padding: 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    
+    .pricing-features {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .pricing-features li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .countdown-box {
+        background-color: var(--primary);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .countdown-item {
+        display: inline-block;
+        margin: 0 10px;
+    }
+    
+    .countdown-number {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .guarantee-section {
+        background-color: var(--light);
+        padding: 60px 0;
+        border-radius: 10px;
+    }
+    
+    .podcast-section {
+        background-color: var(--light);
+    }
+    
+    .podcast-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: auto;
+            padding: 100px 0;
+        }
+        
+        .method-step {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
+<style>
+    /* Custom Hero Styles */
+    .hero-section {
+      color: white;
+      position: relative;
+    }
+    
+    .hero-bg-image {
+      background: url('{% static "images/hero.jpeg" %}') no-repeat center center;
+      background-size: cover;
+      z-index: 0;
+    }
+    
+    .hero-overlay {
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+    
+    .text-gradient-fire {
+      background: linear-gradient(90deg, #f97316 0%, #ef4444 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    
+    .btn-fire {
+      background: linear-gradient(90deg, #f97316 0%, #ef4444 100%);
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-fire:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+    }
+    
+    .hover-scale {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .statistic-badge {
+      border: 2px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .z-index-1 {
+      z-index: 1;
+    }
+    
+    .min-vh-100 {
+      min-height: 100vh;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<!-- Premium Hero Section with Image Background -->
+<section class="hero-section position-relative overflow-hidden min-vh-100 d-flex align-items-center">
+    <!-- Background Image -->
+    <div class="hero-bg-image position-absolute w-100 h-100"></div>
+    
+    <!-- Dark overlay for text readability -->
+    <div class="hero-overlay position-absolute w-100 h-100"></div>
+    
+    <div class="container position-relative z-index-1">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center px-3">
+          <!-- Attention-grabbing statistic -->
+          <div class="statistic-badge bg-danger bg-opacity-20 text-danger d-inline-block px-4 py-2 mb-4 rounded-pill fw-bold">
+            <span class="d-block fs-1 lh-1 text-white">98%</span>
+            <span class="text-uppercase small text-muted">OF PROSPECTS AREN'T BUYING</span>
+          </div>
+          
+          <!-- Main headline -->
+          <h1 class="display-2 fw-bold text-white mb-3 text-uppercase">
+            <span class="d-block">PUT CUSTOMERS FIRST.</span>
+            <span class="text-gradient-fire">WIN WITH FIRE.</span>
+          </h1>
+          
+          <!-- Author byline -->
+          <p class="text-white-70 mb-5 fs-5">
+            By Wynston A. Wilson, M.Ed. | Customer Experience Strategist
+          </p>
+          
+          <!-- CTA Buttons -->
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+            <a href="{% url 'booking' %}" class="btn btn-fire btn-lg px-4 py-3 rounded-1 fw-bold">
+              <span class="d-flex align-items-center justify-content-center">
+                GET THE BLUEPRINT NOW
+                <i class="fas fa-arrow-right ms-3 fs-5"></i>
+              </span>
+            </a>
+            <a href="#results" class="btn btn-outline-light btn-lg px-4 py-3 rounded-1 hover-scale fw-bold">
+              <span class="d-flex align-items-center justify-content-center">
+                SEE PROVEN RESULTS
+                <i class="fas fa-play-circle ms-3 fs-5"></i>
+              </span>
+            </a>
+          </div>
+          
+          <!-- Trust indicators -->
+          <div class="trust-badges d-flex flex-wrap justify-content-center gap-3 mt-5 pt-3">
+            <div class="badge bg-white bg-opacity-10 text-white-80 px-3 py-2 rounded-pill small">
+              <i class="fas fa-medal me-2 text-warning"></i> 500+ Companies Transformed
+            </div>
+            <div class="badge bg-white bg-opacity-10 text-white-80 px-3 py-2 rounded-pill small">
+              <i class="fas fa-star me-2 text-warning"></i> 4.9/5 (247 Reviews)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+    
+    <!-- Services Section -->
+<section class="py-5 bg-light">
+  <div class="container py-5">
+      <div class="row justify-content-center mb-5">
+          <div class="col-lg-8 text-center">
+              <h2 class="fw-bold mb-3">What We Offer</h2>
+              <p class="lead">Transform your sales approach with our specialized resources</p>
+          </div>
+      </div>
+      <div class="row g-4">
+          <!-- Podcast Card -->
+          <div class="col-md-6 col-lg-3">
+              <div class="service-card h-100">
+                  <div class="service-icon bg-primary-blue">
+                      <i class="fas fa-podcast text-primary"></i>
+                  </div>
+                  <h3 class="mt-3">The Podcast</h3>
+                  <p class="text-muted">"Putting Customers First" - Weekly high-impact audio for government and corporate teams across East Africa.</p>
+                  <a href="#" class="btn btn-sm btn-outline-primary mt-auto align-self-start">
+                      Listen to Episodes <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Webinars Card -->
+          <div class="col-md-6 col-lg-3">
+              <div class="service-card h-100">
+                  <div class="service-icon bg-primary-blue">
+                      <i class="fas fa-chalkboard-teacher text-primary"></i>
+                  </div>
+                  <h3 class="mt-3">Coaching Webinars</h3>
+                  <p class="text-muted">Live and on-demand sessions with Africa's conversion coach featuring regional sales tactics.</p>
+                  <a href="#" class="btn btn-sm btn-outline-primary mt-auto align-self-start">
+                      Book Your Seat <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- E-Books Card -->
+          <div class="col-md-6 col-lg-3">
+              <div class="service-card h-100">
+                  <div class="service-icon bg-primary-blue">
+                      <i class="fas fa-book-open text-primary"></i>
+                  </div>
+                  <h3 class="mt-3">Motivational E-Books</h3>
+                  <p class="text-muted">Powerful reads to shift your mindset and keep you closing deals.</p>
+                  <a href="#" class="btn btn-sm btn-outline-primary mt-auto align-self-start">
+                      Explore E-Books <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Workbooks Card -->
+          <div class="col-md-6 col-lg-3">
+              <div class="service-card h-100">
+                  <div class="service-icon bg-primary-blue">
+                      <i class="fas fa-tasks text-primary"></i>
+                  </div>
+                  <h3 class="mt-3">Coaching Workbooks</h3>
+                  <p class="text-muted">Actionable companion guides for our masterclasses.</p>
+                  <a href="#" class="btn btn-sm btn-outline-primary mt-auto align-self-start">
+                      Download Resources <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+
+    <!-- Responsive Pre-Order Section -->
+    <section class="pre-order-responsive py-5 bg-white">
+        <div class="container">
+            <!-- Mobile Only - eBook Cover (shown only on small devices) -->
+            <div class="d-block d-lg-none text-center mb-4">
+                <img src="{% static 'images/putting-customers-first.jpeg' %}" 
+                     alt="Putting Customers First eBook Cover" 
+                     class="ebook-cover-mobile animate__animated animate__fadeInDown"
+                     style="max-width: 200px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            </div>
+      
+            <div class="d-flex flex-lg-row flex-column align-items-center">
+                <!-- Desktop eBook Cover (hidden on mobile) -->
+                <div class="ebook-cover-desktop d-none d-lg-block pe-lg-5 me-lg-5">
+                    <img src="{% static 'images/putting-customers-first.jpeg' %}" 
+                         alt="Putting Customers First eBook Cover" 
+                         class="animate__animated animate__fadeInLeft"
+                         style="max-width: 280px; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.3);">
+                </div>
+                
+                <!-- Pre-Order Content -->
+                <div class="pre-order-content-wrapper">
+                    <div class="pre-order-content">
+                        <span class="badge bg-primary bg-opacity-10 text-primary pulse mb-3">LIMITED TIME OFFER</span>
+                        <h2 class="mb-3">eBook: Putting Customers First</h2>
+                        
+                        <div class="price-display animate__animated animate__pulse animate__infinite animate__slower mb-4">
+                            <h3 class="current-price text-primary">Just $19.99</h3>
+                            <div class="price-comparison d-flex flex-wrap justify-content-center gap-3">
+                                <span class="original-price">Retail: $29.99</span>
+                                <span class="digital-price">Digital: $2.99</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Features - Horizontal scroll on mobile, grid on desktop -->
+                        <div class="features-container mb-4">
+                            <div class="features-grid d-none d-lg-grid">
+                                <div class="feature-item">
+                                    <i class="fas fa-bolt text-primary"></i>
+                                    <p style="color: #02142e;">Instant delivery</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-mobile-alt text-primary"></i>
+                                    <p style="color: #02142e;">Any device</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-file-pdf text-primary"></i>
+                                    <p style="color: #02142e;">3 formats</p>
+                                </div>
+                            </div>
+                            
+                            <div class="features-scroller d-lg-none">
+                                <div class="feature-item">
+                                    <i class="fas fa-bolt text-primary"></i>
+                                    <p style="color: #02142e;">Instant delivery</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-mobile-alt text-primary"></i>
+                                    <p style="color: #02142e;">Any device</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-file-pdf text-primary"></i>
+                                    <p style="color: #02142e;">3 formats</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <!-- Button (keep your existing button) -->
+                            <button class="btn btn-lg btn-primary pre-order-btn animate__animated animate__tada animate__infinite animate__slower mb-3" data-bs-toggle="modal" data-bs-target="#mpesaPaymentModal">
+                              PRE-ORDER NOW <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+
+                            <!-- M-Pesa Payment Modal -->
+                            <div class="modal fade" id="mpesaPaymentModal" tabindex="-1" aria-labelledby="mpesaPaymentModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="mpesaPaymentModalLabel">Complete Your Purchase</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        {% if user.is_authenticated %}
+                                          <!-- Authenticated User Form (hidden by default) -->
+                                          <form id="authenticatedForm" class="form" method="post" action="">
+                                            <div class="payment-methods mb-4">
+                                              <div class="method-item bg-white p-3 rounded shadow-sm mb-3">
+                                                  <img src="{% static 'images/mpesa-logo.png' %}" alt="M-Pesa" class="payment-logo" style="height: 60px; width: 100%;">
+                                              </div>
+                                              <span class="ms-3 fw-bold">Lipa na M-Pesa</span>
+                                              <p class="text-muted mb-4">Other methods available upon request</p>
+                                          </div>
+                                              <div class="mb-3">
+                                                  <label for="mpesaPhone" class="form-label text-primary">M-Pesa Phone Number</label>
+                                                  <div class="input-group">
+                                                      <select class="form-select country-code-select" name="country_code" style="max-width: 120px;">
+                                                          <option value="254" selected>Kenya (+254)</option>
+                                                          <option value="255">Tanzania (+255)</option>
+                                                          <option value="256">Uganda (+256)</option>
+                                                          <option value="250">Rwanda (+250)</option>
+                                                          <option value="257">Burundi (+257)</option>
+                                                          <option value="252">Somalia (+252)</option>
+                                                          <option value="253">Djibouti (+253)</option>
+                                                          <option value="251">Ethiopia (+251)</option>
+                                                          <option value="211">South Sudan (+211)</option>
+                                                      </select>
+                                                      <input type="tel" class="form-control" id="mpesaPhone" placeholder="712345678" required>
+                                                  </div>
+                                                  <div class="form-text">You will receive an M-Pesa push notification to complete payment</div>
+                                              </div>
+                                              <button type="submit" class="btn btn-primary w-100">Pay via M-Pesa</button>
+                                          </form>
+                                          {% else %}
+                                          <!-- Unauthenticated User Form -->
+                                          <form id="unauthenticatedForm" class="form" method="post" action="">
+                                            <div class="payment-methods mb-4">
+                                              <div class="method-item bg-white p-3 rounded shadow-sm mb-3">
+                                                  <img src="{% static 'images/mpesa-logo.png' %}" alt="M-Pesa" class="payment-logo" style="height: 60px; width: 100%;">
+                                              </div>
+                                              <span class="ms-3 fw-bold">Lipa na M-Pesa</span>
+                                              <p class="text-muted mb-4">Other methods available upon request</p>
+                                          </div>
+                                              <div class="mb-3">
+                                                  <label for="fullName" class="form-label text-primary">Full Name</label>
+                                                  <input type="text" class="form-control" id="fullName" required>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label for="email" class="form-label text-primary">Email Address</label>
+                                                  <input type="email" class="form-control" id="email" required>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label for="unAuthPhone" class="form-label text-primary">M-Pesa Phone Number</label>
+                                                  <div class="input-group">
+                                                      <select class="form-select country-code-select" style="max-width: 120px;">
+                                                          <option value="254" selected>Kenya (+254)</option>
+                                                          <option value="255">Tanzania (+255)</option>
+                                                          <option value="256">Uganda (+256)</option>
+                                                          <option value="250">Rwanda (+250)</option>
+                                                          <option value="257">Burundi (+257)</option>
+                                                          <option value="252">Somalia (+252)</option>
+                                                          <option value="253">Djibouti (+253)</option>
+                                                          <option value="251">Ethiopia (+251)</option>
+                                                          <option value="211">South Sudan (+211)</option>
+                                                      </select>
+                                                      <input type="tel" class="form-control" id="unAuthPhone" placeholder="712345678" required>
+                                                  </div>
+                                                  <div class="form-text">You will receive an M-Pesa push notification to complete payment</div>
+                                              </div>
+                                              <button type="submit" class="btn btn-primary w-100">Pay via M-Pesa</button>
+                                          </form>
+                                          {% endif %}
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                            
+                            <div class="d-block mt-2">
+                                <a href="{% url 'ebook_list' %}" class="btn btn-outline-primary">
+                                    Explore All eBooks <i class="fas fa-book-open ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
+<!-- Easy Payment Section -->
+<!--section class="payment-section py-5 bg-off-white">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+              <div class="payment-card p-4 p-md-5 animate__animated animate__fadeIn">
+                  <h2 class="mb-4"><i class="fas fa-wallet text-primary-blue me-2"></i> PAY WITH EASE</h2>
+                  
+                  <div class="payment-methods mb-4">
+                      <div class="method-item bg-white p-3 rounded shadow-sm mb-3">
+                          <img src="{% static 'images/mpesa-logo.png' %}" alt="M-Pesa" class="payment-logo" style="height: 40px;">
+                          <span class="ms-3 fw-bold">Lipa na M-Pesa</span>
+                      </div>
+                      <p class="text-muted mb-4">Other methods available upon request</p>
+                  </div>
+                  
+                  <button class="btn btn-primary btn-lg payment-btn animate__animated animate__pulse animate__infinite animate__slower mb-3">
+                      <i class="fas fa-arrow-right me-2"></i> Click to Pay & Pre-Order
+                  </button>
+                  
+                  <div class="delivery-info bg-light-blue p-3 rounded">
+                      <i class="fas fa-check-circle text-success me-2"></i>
+                      <span>Instant delivery upon payment confirmation</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section-->
+
+<!-- Photo Gallery Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Gallery</h2>
+            <p class="lead text-muted">Moments from our training sessions and events</p>
+        </div>
+        
+        <!-- Category Filters -->
+        <div class="text-center mb-4">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                {% for category in categories %}
+                    <button type="button" class="btn btn-outline-primary" data-filter="{{ category.slug }}">
+                        {{ category.name }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Photo Grid -->
+        <div class="row g-4" id="photo-grid">
+            {% for photo in featured_photos %}
+                <div class="col-md-6 col-lg-4 col-xl-3" data-categories="{% for cat in photo.categories.all %}{{ cat.slug }} {% endfor %}">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <div class="position-relative overflow-hidden" style="height: 200px;">
+                            <img src="{{ photo.image.url }}" class="card-img-top h-100 w-100 object-fit-cover" alt="{{ photo.title }}">
+                            <div class="photo-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                                <div>
+                                    <h5 class="text-white mb-1">{{ photo.title }}</h5>
+                                    <p class="text-white-50 small mb-0">{{ photo.description|truncatechars:60 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if featured_photos|length >= 8 %}
+            <div class="text-center mt-5">
+                <a href="{% url 'full_gallery' %}" class="btn btn-primary px-4">
+                    View Full Gallery <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+
+
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5 bg-light">
+  <div class="container">
+      <div class="row justify-content-center mb-4">
+          <div class="col-lg-8 text-center">
+              <h2 class="fw-bold"><i class="fas fa-quote-left text-primary-blue me-2"></i>TESTIMONIALS</h2>
+              <p class="lead text-muted">What our clients say</p>
+          </div>
+      </div>
+
+      <div class="row g-4">
+          <!-- Testimonial 1 -->
+          <div class="col-md-6">
+              <div class="testimonial-card h-100 p-4 p-lg-5">
+                  <div class="quote-icon text-primary-blue mb-3">
+                      <i class="fas fa-quote-left fa-2x"></i>
+                  </div>
+                  <blockquote class="mb-4">
+                      “This book changed how my team thinks about sales. It’s not a pitch—it’s a mission.”
+                  </blockquote>
+                  <div class="client-info d-flex align-items-center">
+                      <div class="client-badge bg-primary-blue text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                          <i class="fas fa-user"></i>
+                      </div>
+                      <div>
+                          <h5 class="mb-0">Head of Sales</h5>
+                          <small class="text-muted">Nairobi, Kenya</small>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="col-md-6">
+              <div class="testimonial-card h-100 p-4 p-lg-5">
+                  <div class="quote-icon text-primary-blue mb-3">
+                      <i class="fas fa-quote-left fa-2x"></i>
+                  </div>
+                  <blockquote class="mb-4">
+                      “We've tripled conversions since implementing Principle #4. Wynston is the real deal.”
+                  </blockquote>
+                  <div class="client-info d-flex align-items-center">
+                      <div class="client-badge bg-primary-blue text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                          <i class="fas fa-user-tie"></i>
+                      </div>
+                      <div>
+                          <h5 class="mb-0">Public Sector Training Director</h5>
+                          <small class="text-muted">Dar es Salaam</small>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- View More Link -->
+      <div class="text-center mt-5">
+          <a href="#" class="btn btn-outline-primary">
+              View More Success Stories <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+      </div>
+  </div>
+</section>
+
+<section class="pricing-section py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary bg-opacity-10 text-primary mb-2">FLEXIBLE PLANS</span>
+        <h2 class="mb-3">Simple, Transparent Pricing</h2>
+        <p class="text-muted">Choose the perfect plan for your needs</p>
+      </div>
+  
+      <div class="row g-4 justify-content-center">
+        <!-- Basic Plan -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white py-4 border-0 text-center">
+              <h4 class="fw-bold">Basic</h4>
+              <div class="price-display my-3">
+                <span class="h2 fw-bold text-primary">$19.99</span>
+                <div class="text-muted small mt-2">
+                  <span>KES 2,800</span> · 
+                  <span>TZS 46,000</span> · 
+                  <span>UGX 74,000</span>
+                </div>
+              </div>
+              <a href="#" class="btn btn-outline-primary">Get Started</a>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> eBook in 3 formats</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Mobile friendly</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Instant download</li>
+                <li class="mb-3 text-muted"><i class="fas fa-times me-2"></i> Workbook (PDF)</li>
+                <li class="mb-3 text-muted"><i class="fas fa-times me-2"></i> Audio version</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Popular Plan -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 border-0 shadow-lg">
+            <div class="card-header bg-primary text-white py-4 border-0 text-center position-relative">
+              <span class="badge bg-white text-primary position-absolute top-0 start-50 translate-middle">POPULAR</span>
+              <h4 class="fw-bold text-white">Standard</h4>
+              <div class="price-display my-3">
+                <span class="h2 fw-bold text-white">$29.99</span>
+                <div class="text-white-50 small mt-2">
+                  <span>KES 4,200</span> · 
+                  <span>TZS 69,000</span> · 
+                  <span>UGX 111,000</span>
+                </div>
+              </div>
+              <a href="#" class="btn bg-light">Get Started</a>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Everything in Basic</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Workbook (PDF)</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Cheat sheets</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> 3 bonus chapters</li>
+                <li class="mb-3 text-muted"><i class="fas fa-times me-2"></i> Audio version</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Premium Plan -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white py-4 border-0 text-center">
+              <h4 class="fw-bold">Premium</h4>
+              <div class="price-display my-3">
+                <span class="h2 fw-bold text-primary">$49.99</span>
+                <div class="text-muted small mt-2">
+                  <span>KES 7,000</span> · 
+                  <span>TZS 115,000</span> · 
+                  <span>UGX 185,000</span>
+                </div>
+              </div>
+              <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Everything in Standard</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Audio version</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> 1-on-1 consultation</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Lifetime updates</li>
+                <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Priority support</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="text-center mt-5">
+        <div class="d-inline-flex align-items-center bg-white p-3 rounded shadow-sm">
+          <i class="fas fa-shield-alt text-primary me-2"></i>
+          <span class="me-3">30-Day Money Back Guarantee</span>
+          <a href="#" class="btn btn-sm btn-outline-primary">Learn more</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- CTA Section 
+<section class="cta-section py-5 bg-primary-blue text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+              <h2 class="fw-bold mb-4">Ready to Transform Your Sales Approach?</h2>
+              <p class="lead mb-5">Take the next step with our proven resources and training</p>
+              
+              <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+
+                  <a href="#" class="btn btn-accent btn-lg px-4 py-3">
+                      <i class="fas fa-shopping-cart me-2"></i> Pre-Order the Book Now
+                  </a>
+                  
+
+                  <a href="#" class="btn btn-light btn-lg px-4 py-3">
+                      <i class="fas fa-podcast me-2"></i> Subscribe to the Podcast
+                  </a>
+                  <a href="#" class="btn btn-outline-light btn-lg px-4 py-3">
+                      <i class="fas fa-chalkboard-teacher me-2"></i> Book Coaching Webinars
+                  </a>
+              </div>
+              
+              <div class="trust-badges mt-5 d-flex flex-wrap justify-content-center align-items-center gap-4">
+                  <div class="badge-item">
+                      <i class="fas fa-shield-alt fa-2x me-2"></i>
+                      <span>30-Day Guarantee</span>
+                  </div>
+                  <div class="badge-item">
+                      <i class="fas fa-star fa-2x me-2"></i>
+                      <span>Proven Results</span>
+                  </div>
+                  <div class="badge-item">
+                      <i class="fas fa-users fa-2x me-2"></i>
+                      <span>500+ Clients</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section-->
+
+
+<!-- About Wilson Section -->
+<section class="about-section py-5 my-5">
+  <div class="container">
+      <div class="row align-items-center">
+          <!-- Logo Column -->
+          <div class="col-lg-4 text-center mb-5 mb-lg-0">
+              <div class="logo-container p-4">
+                  <img src="{% static 'images/logo.png' %}" 
+                       alt="Wilson Logo" 
+                       class="img-fluid logo-img shadow-lg"
+                       style="max-height: 300px;">
+                  <div class="logo-badge mt-3">
+                      <span class="badge bg-primary py-2 px-3 fs-6">
+                          Trusted Since 2015
+                      </span>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Content Column -->
+          <div class="col-lg-8">
+              <h2 class="display-5 fw-bold mb-4">
+                  <span class="text-primary">Meet</span> Wilson
+              </h2>
+              
+              <div class="about-content">
+                  <p class="lead mb-4">
+                    Wilson On Your Mind, LLC is a coaching business based in North Bergen, New Jersey. We are dedicated to helping individuals enhance their sales skills, develop a positive mindset, and achieve their goals. Our team of experienced coaches is committed to providing personalized support and guidance to empower our clients.
+                  </p>
+                  
+                  <div class="d-flex align-items-center mb-4">
+                      <div class="flex-shrink-0 text-primary me-3">
+                          <i class="fas fa-award fa-2x"></i>
+                      </div>
+                      <div>
+                          <h5 class="mb-1">Certified Professional</h5>
+                          <p class="mb-0 text-muted">
+                              
+                          </p>
+                      </div>
+                  </div>
+                  
+                  <div class="d-flex align-items-center mb-4">
+                      <div class="flex-shrink-0 text-primary me-3">
+                          <i class="fas fa-users fa-2x"></i>
+                      </div>
+                      <div>
+                          <h5 class="mb-1">Client-Focused Approach</h5>
+                          <p class="mb-0 text-muted">
+                              
+                          </p>
+                      </div>
+                  </div>
+                  
+                  <div class="d-flex align-items-center">
+                      <div class="flex-shrink-0 text-primary me-3">
+                          <i class="fas fa-lightbulb fa-2x"></i>
+                      </div>
+                      <div>
+                          <h5 class="mb-1">Unique Methodology</h5>
+                          <p class="mb-0 text-muted">
+                              
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Countdown Timer
+    function updateCountdown() {
+        const targetDate = new Date("2024-06-18T00:00:00").getTime();
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById("days").textContent = days.toString().padStart(2, '0');
+        document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    // Update every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    
+    // Form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Thank you! Wilson will contact you within 24 hours to schedule your session.');
+        this.reset();
+    });
+    
+    // Animate method steps on scroll
+    const methodSteps = document.querySelectorAll('.method-step');
+    
+    function animateOnScroll() {
+        methodSteps.forEach(step => {
+            const stepPosition = step.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.3;
+            
+            if(stepPosition < screenPosition) {
+                step.style.opacity = '1';
+                step.style.transform = 'translateY(0)';
+            }
+        });
+    }
+    
+    // Set initial state
+    methodSteps.forEach(step => {
+        step.style.opacity = '0';
+        step.style.transform = 'translateY(20px)';
+        step.style.transition = 'all 0.6s ease';
+    });
+    
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+</script>
+
+
+
+
+<!-- JavaScript for filtering -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const photoItems = document.querySelectorAll('#photo-grid > [data-categories]');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filterValue = this.getAttribute('data-filter');
+                
+                // Filter photos
+                photoItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-categories').includes(filterValue)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book a Session | In Wilson We Trust{% endblock %}
+
+{% block extra_css %}
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<style>
+    .booking-hero {
+        background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.8)), 
+                    url('{% static "images/booking-hero.jpg" %}') no-repeat center center/cover;
+        color: white;
+        padding: 100px 0;
+    }
+    
+    .booking-container {
+        margin-top: -50px;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .booking-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .calendly-container {
+        min-height: 700px;
+        width: 100%;
+    }
+    
+    .intro-section {
+        padding: 40px;
+        text-align: center;
+    }
+    
+    @media (max-width: 992px) {
+        .booking-container {
+            margin-top: 0;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .booking-hero {
+            padding: 80px 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Calendly inline widget
+        Calendly.initInlineWidget({
+            url: 'https://calendly.com/your-username/event-type',
+            parentElement: document.querySelector('.calendly-inline-widget'),
+            prefill: {
+                name: "{{ request.user.get_full_name|default:'' }}",
+                email: "{{ request.user.email|default:'' }}",
+                // Add any additional custom fields you want to prefill
+            },
+            utm: {
+                utmSource: 'Website',
+                utmMedium: 'BookingPage',
+                utmCampaign: 'WilsonConsulting'
+            }
+        });
+
+        // Optional: If you want to use multiple event types
+        function loadCalendlyEvent(eventType) {
+            Calendly.initInlineWidget({
+                url: `https://calendly.com/your-username/${eventType}`,
+                parentElement: document.querySelector('.calendly-inline-widget'),
+                prefill: {
+                    name: "{{ request.user.get_full_name|default:'' }}",
+                    email: "{{ request.user.email|default:'' }}"
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="booking-hero" style="background: linear-gradient(rgba(0, 51, 102, 0.349), rgba(0, 51, 102, 0.432)), url('{% static "images/bookme.png" %}') no-repeat center center/cover;">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-4">Book Your Session</h1>
+        <p class="lead">Schedule a personalized consultation or training session with Wilson</p>
+    </div>
+</section>
+
+<!-- Booking Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="booking-container">
+            <div class="booking-card">
+                <!-- Introduction Section -->
+                <div class="intro-section">
+                    <h3 class="mb-3">Schedule Your Appointment</h3>
+                    <p class="lead mb-4">Select an available time below that works for you</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        All times are displayed in your local time zone
+                    </div>
+                </div>
+                
+                <!-- Calendly Inline Widget -->
+                <div class="calendly-inline-widget calendly-container" 
+                     data-url="https://calendly.com/your-username/event-type"></div>
+                
+                <!-- Optional: Multiple Event Type Selector -->
+                <!--
+                <div class="event-type-selector p-4 text-center">
+                    <h5 class="mb-3">Select Session Type</h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" onclick="loadCalendlyEvent('consultation')">
+                            Consultation
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="loadCalendlyEvent('training')">
+                            Training
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="loadCalendlyEvent('followup')">
+                            Follow-up
+                        </button>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
