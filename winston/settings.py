@@ -5,19 +5,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*@_9a05hq9mk%xp$tpq@+lmpr9()6bm%y1b^xx$^#(=ez5d!&+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -32,7 +25,7 @@ INSTALLED_APPS = [
     'booking',
     'gallery',
     'payments',
-'templates_handler',
+    'templates_handler',
 ]
 
 INSTALLED_APPS += ['django.contrib.flatpages', 'django.contrib.sites', 'paypal.standard.ipn']
@@ -116,16 +109,18 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'winston/static')
 ]
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-#STATIC_ROOT = '/root/winston/static/'
-STATIC_ROOT = '/var/www/winston/static/'
+# FOR LOCAL TESTING USE THIS
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# ENABLE THIS ON DIGITAL OCEAN DROPLET
+#STATIC_ROOT = '/var/www/winston/static/'
 
 
 # media patterns
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/winston/media/'
-
-# os.path.join(BASE_DIR, 'media')
+# ENABLE THIS ON DIGITAL OCEAN DROPLET
+#MEDIA_ROOT = '/var/www/winston/media/'
+# FOR LOCAL TESTING USE THIS
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
