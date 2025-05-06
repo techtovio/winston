@@ -2,6 +2,34 @@
 {% load static %}
 {% load content_containers %}
 {% block extra_css %}
+<!-- Required CSS -->
+<style>
+  .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+  .gallery-link:hover .gallery-overlay {
+      opacity: 1;
+  }
+  .hover-scale {
+      transition: transform 0.3s ease;
+  }
+  .hover-scale:hover {
+      transform: scale(1.02);
+      z-index: 5;
+  }
+  .gallery-item {
+      transition: all 0.3s ease;
+  }
+</style>
+
+
 <style>
   .about-section {
       background-color: #f8f9fa;
@@ -1106,54 +1134,67 @@
   </div>
 </section-->
 
-<!-- Photo Gallery Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold">Gallery</h2>
-            <p class="lead text-muted">Moments from our training sessions and events</p>
-        </div>
-        
-        <!-- Category Filters -->
-        <div class="text-center mb-4">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
-                {% for category in categories %}
-                    <button type="button" class="btn btn-outline-primary" data-filter="{{ category.slug }}">
-                        {{ category.name }}
-                    </button>
-                {% endfor %}
-            </div>
-        </div>
-        
-        <!-- Photo Grid -->
-        <div class="row g-4" id="photo-grid">
-            {% for photo in featured_photos %}
-                <div class="col-md-6 col-lg-4 col-xl-3" data-categories="{% for cat in photo.categories.all %}{{ cat.slug }} {% endfor %}">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
-                        <div class="position-relative overflow-hidden" style="height: 200px;">
-                            <img src="{{ photo.image.url }}" class="card-img-top h-100 w-100 object-fit-cover" alt="{{ photo.title }}">
-                            <div class="photo-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
-                                <div>
-                                    <h5 class="text-white mb-1">{{ photo.title }}</h5>
-                                    <p class="text-white-50 small mb-0">{{ photo.description|truncatechars:60 }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        
-        {% if featured_photos|length >= 8 %}
-            <div class="text-center mt-5">
-                <a href="{% url 'full_gallery' %}" class="btn btn-primary px-4">
-                    View Full Gallery <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-        {% endif %}
-    </div>
+<!-- Enhanced Photo Gallery Section -->
+<section class="py-5 bg-light" id="gallery">
+  <div class="container">
+      <div class="text-center mb-5">
+          <h2 class="display-5 fw-bold">Our Gallery</h2>
+          <p class="lead text-muted">Capturing transformative moments from our community</p>
+      </div>
+      
+      <!-- Improved Category Filters -->
+      <div class="text-center mb-4">
+          <div class="btn-group flex-wrap" role="group">
+              <button type="button" class="btn btn-outline-primary active mb-2" data-filter="all">All</button>
+              {% for category in categories %}
+                  <button type="button" class="btn btn-outline-primary mb-2" data-filter="{{ category.slug }}">
+                      <i class="fas fa-{{ category.icon|default:'image' }} me-2"></i>
+                      {{ category.name }}
+                  </button>
+              {% endfor %}
+          </div>
+      </div>
+      
+      <!-- Enhanced Photo Grid with Masonry Layout -->
+      <div class="row g-3" id="photo-grid" data-masonry='{"percentPosition": true}'>
+          {% for photo in featured_photos %}
+              <div class="col-sm-6 col-lg-4 col-xl-3 mb-4 gallery-item" 
+                   data-categories="{% for cat in photo.categories.all %}{{ cat.slug }} {% endfor %}">
+                  <div class="card border-0 shadow-sm h-100 overflow-hidden hover-scale">
+                      <a href="{{ photo.image.url }}" data-lightbox="gallery" data-title="{{ photo.title }}" 
+                         class="gallery-link position-relative d-block overflow-hidden ratio ratio-4x3">
+                          <img src="{{ photo.image.url }}" 
+                               class="img-fluid w-100 h-100 object-fit-cover" 
+                               alt="{{ photo.title }}"
+                               loading="lazy">
+                          <div class="gallery-overlay d-flex flex-column justify-content-end p-3">
+                              <div class="overlay-content">
+                                  <h5 class="text-white mb-1">{{ photo.title }}</h5>
+                                  <p class="text-white-50 small mb-0 d-none d-sm-block">
+                                      {{ photo.description|truncatechars:80 }}
+                                  </p>
+                                  <div class="mt-2">
+                                      {% for cat in photo.categories.all %}
+                                          <span class="badge bg-primary bg-opacity-50 me-1">{{ cat.name }}</span>
+                                      {% endfor %}
+                                  </div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+          {% endfor %}
+      </div>
+      
+      <div class="text-center mt-4">
+          <a href="{% url 'full_gallery' %}" class="btn btn-primary px-4 py-2 rounded-pill">
+              Explore Full Gallery <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+      </div>
+  </div>
 </section>
+
+
 
 
 {% render_content_container 'landing' %}
@@ -1316,55 +1357,11 @@
       <div class="text-center mt-5">
         <div class="d-inline-flex align-items-center bg-white p-3 rounded shadow-sm">
           <i class="fas fa-shield-alt text-primary me-2"></i>
-          <span class="me-3">30-Day Money Back Guarantee</span>
           <a href="#" class="btn btn-sm btn-outline-primary">Learn more</a>
         </div>
       </div>
     </div>
   </section>
-
-<!-- CTA Section 
-<section class="cta-section py-5 bg-primary-blue text-white">
-  <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-lg-8 text-center">
-              <h2 class="fw-bold mb-4">Ready to Transform Your Sales Approach?</h2>
-              <p class="lead mb-5">Take the next step with our proven resources and training</p>
-              
-              <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
-
-                  <a href="#" class="btn btn-accent btn-lg px-4 py-3">
-                      <i class="fas fa-shopping-cart me-2"></i> Pre-Order the Book Now
-                  </a>
-                  
-
-                  <a href="#" class="btn btn-light btn-lg px-4 py-3">
-                      <i class="fas fa-podcast me-2"></i> Subscribe to the Podcast
-                  </a>
-                  <a href="#" class="btn btn-outline-light btn-lg px-4 py-3">
-                      <i class="fas fa-chalkboard-teacher me-2"></i> Book Coaching Webinars
-                  </a>
-              </div>
-              
-              <div class="trust-badges mt-5 d-flex flex-wrap justify-content-center align-items-center gap-4">
-                  <div class="badge-item">
-                      <i class="fas fa-shield-alt fa-2x me-2"></i>
-                      <span>30-Day Guarantee</span>
-                  </div>
-                  <div class="badge-item">
-                      <i class="fas fa-star fa-2x me-2"></i>
-                      <span>Proven Results</span>
-                  </div>
-                  <div class="badge-item">
-                      <i class="fas fa-users fa-2x me-2"></i>
-                      <span>500+ Clients</span>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</section-->
-
 
 <!-- About Wilson Section -->
 <section class="about-section py-5 my-5">
@@ -1526,5 +1523,9 @@
         });
     });
 </script>
+
+<!-- Required JS Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
 {% endblock %}
