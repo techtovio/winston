@@ -1,0 +1,10 @@
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            {% for item in container.items.all %}
+                {% if item.title %}<h2>{{ item.title }}</h2>{% endif %}
+                <div>{{ item.content|safe }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="container my-5">
+    {% if container.items.first.title %}
+    <h2 class="text-center mb-5">{{ container.items.first.title }}</h2>
+    {% endif %}
+    
+    <div class="row">
+        {% for member in container.team_members.all %}
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <img src="{{ member.image.url }}" class="card-img-top rounded-circle w-50 mx-auto mt-3" alt="{{ member.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ member.name }}</h5>
+                    <p class="card-subtitle text-muted">{{ member.position }}</p>
+                    <p class="card-text mt-3">{{ member.bio|truncatewords:20 }}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    {% if member.email %}
+                    <a href="mailto:{{ member.email }}" class="text-muted mx-1"><i class="fas fa-envelope"></i></a>
+                    {% endif %}
+                    {% if member.phone %}
+                    <a href="tel:{{ member.phone }}" class="text-muted mx-1"><i class="fas fa-phone"></i></a>
+                    {% endif %}
+                    {% if member.social_media %}
+                        {% for platform, url in member.social_media.items %}
+                        <a href="{{ url }}" class="text-muted mx-1"><i class="fab fa-{{ platform }}"></i></a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

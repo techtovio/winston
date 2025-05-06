@@ -1,0 +1,23 @@
+<div class="container my-5">
+    {% if container.items.first.title %}
+    <h2 class="text-center mb-4">{{ container.items.first.title }}</h2>
+    {% endif %}
+    
+    <div class="row">
+        {% for item in container.items.all %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.image_alt }}">
+                {% endif %}
+                {% if item.title and not forloop.first or container.items.count == 1 %}
+                <div class="card-body">
+                    {% if item.title %}<h5 class="card-title">{{ item.title }}</h5>{% endif %}
+                    {% if item.content %}<p class="card-text">{{ item.content|safe }}</p>{% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

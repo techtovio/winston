@@ -1,0 +1,47 @@
+<div class="container my-5">
+    {% if container.items.first.title %}
+    <h2 class="text-center mb-5">{{ container.items.first.title }}</h2>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-12">
+            <div id="testimonialCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    {% for testimonial in container.testimonials.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="card border-0">
+                            <div class="card-body text-center py-4">
+                                <div class="mb-3">
+                                    {% for i in "12345" %}
+                                    <i class="fas fa-star{% if i|add:0 > testimonial.ating %} text-muted{% else %} text-warning{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                                <p class="lead font-italic mb-4">"{{ testimonial.content }}"</p>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    {% if testimonial.image %}
+                                    <img src="{{ testimonial.image.url }}" class="rounded-circle mr-3" width="60" alt="{{ testimonial.author }}">
+                                    {% endif %}
+                                    <div class="text-left">
+                                        <h5 class="mb-0">{{ testimonial.author }}</h5>
+                                        {% if testimonial.position %}
+                                        <p class="text-muted mb-0">{{ testimonial.position }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#testimonialCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#testimonialCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -29,3 +29,9 @@ class User(AbstractUser):
         #    return f"{self.first_name} {self.last_name}"
         #return self.organization_name or self.email
         return self.email
+
+class About(models.Model):
+    about = models.TextField()
+
+    def __str__(self):
+        return f'{self.about[0:11]} ...'

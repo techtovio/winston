@@ -1,0 +1,213 @@
+{% load static %}
+  
+<style>
+    /* Custom Footer Styles */
+    .footer-section {
+      background: linear-gradient(135deg, #2861ff 0%, #0137b3 100%);
+    }
+    
+    .footer-heading {
+      font-size: 1.1rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    .footer-heading:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background: #3b82f6;
+    }
+    
+    .footer-link {
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-link:hover {
+      color: #3b82f6;
+      padding-left: 5px;
+    }
+    
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      background: #3b82f6;
+      transform: translateY(-3px);
+    }
+    
+    .location-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+    
+    .newsletter-card {
+      background: rgba(30, 58, 138, 0.7);
+      backdrop-filter: blur(5px);
+    }
+    
+    .btn-accent {
+      background: #f59e0b;
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+    
+    .btn-accent:hover {
+      background: #fbbf24;
+    }
+  </style>
+
+<footer class="footer-section bg-dark text-white pt-5 pb-4">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Brand Info Column -->
+        <div class="col-lg-4 mb-4">
+          <div class="footer-brand">
+            <h3 class="fw-bold mb-3">
+              <i class="fas fa-handshake me-2 text-white"></i> In Wilson We Trust
+            </h3>
+            <p class="text-white-50">Transforming customer experiences across East Africa through innovative solutions and training.</p>
+            
+            <!-- Social Media -->
+            <div class="social-media mt-4">
+              <h6 class="text-uppercase small mb-3">Follow Us</h6>
+              <div class="d-flex gap-3">
+                <a href="#" class="social-icon rounded-circle d-flex align-items-center justify-content-center" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-icon rounded-circle d-flex align-items-center justify-content-center" aria-label="LinkedIn">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-icon rounded-circle d-flex align-items-center justify-content-center" aria-label="YouTube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="social-icon rounded-circle d-flex align-items-center justify-content-center" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links Column -->
+        <div class="col-lg-2 col-md-4 mb-4">
+          <h5 class="footer-heading mb-3">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="footer-link">Home</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">About Us</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Our Services</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Training Programs</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Resources</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Blog</a></li>
+          </ul>
+        </div>
+        
+        <!-- Resources Column -->
+        <div class="col-lg-2 col-md-4 mb-4">
+          <h5 class="footer-heading mb-3">Resources</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="footer-link">Free eBooks</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Case Studies</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Webinars</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Templates</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">Research Papers</a></li>
+            <li class="mb-2"><a href="#" class="footer-link">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <!-- Contact Column -->
+        <div class="col-lg-4 col-md-4 mb-4">
+          <h5 class="footer-heading mb-3">Contact Us</h5>
+          
+          <div class="contact-info mb-4">
+            <div class="d-flex mb-3">
+              <i class="fas fa-envelope mt-1 me-3 text-primary"></i>
+              <div>
+                <h6 class="small mb-0">Email</h6>
+                <a href="mailto:info@inwynstonwetrust.com" class="footer-link">info@inwynstonwetrust.com</a>
+              </div>
+            </div>
+            
+            <div class="d-flex mb-3">
+              <i class="fas fa-phone-alt mt-1 me-3 text-primary"></i>
+              <div>
+                <h6 class="small mb-0">Phone</h6>
+                <a href="tel:+254700000000" class="footer-link">+254 700 000000</a>
+              </div>
+            </div>
+            
+            <!-- Locations -->
+            <div class="locations mt-4">
+              <h6 class="small mb-2">Our Offices</h6>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="location-badge">
+                  <i class="fas fa-map-marker-alt me-1 text-primary"></i> Nairobi
+                </span>
+                <span class="location-badge">
+                  <i class="fas fa-map-marker-alt me-1 text-primary"></i> Mombasa
+                </span>
+                <span class="location-badge">
+                  <i class="fas fa-map-marker-alt me-1 text-primary"></i> Kampala
+                </span>
+                <span class="location-badge">
+                  <i class="fas fa-map-marker-alt me-1 text-primary"></i> Arusha
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Newsletter Section -->
+      <div class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+          <div class="newsletter-card bg-primary-dark p-4 rounded">
+            <div class="row align-items-center">
+              <div class="col-lg-5 mb-3 mb-lg-0">
+                <h4 class="text-white mb-0">
+                  <i class="fas fa-paper-plane me-2"></i> Stay Updated
+                </h4>
+                <p class="small text-white-70 mb-0">Get the latest tips and resources</p>
+              </div>
+              <div class="col-lg-7">
+                <form class="d-flex flex-column flex-md-row gap-2">
+                  <input type="email" class="form-control" placeholder="Your email address">
+                  <button type="submit" class="btn btn-accent px-4">
+                    Subscribe <i class="fas fa-arrow-right ms-2"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Copyright & Legal -->
+      <div class="row mt-5">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="small text-white-50 mb-0">&copy; 2023 Putting Customers First. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <ul class="list-inline small mb-0">
+            <li class="list-inline-item"><a href="#" class="text-white-50">Privacy Policy</a></li>
+            <li class="list-inline-item px-2">·</li>
+            <li class="list-inline-item"><a href="#" class="text-white-50">Terms of Service</a></li>
+            <li class="list-inline-item px-2">·</li>
+            <li class="list-inline-item"><a href="#" class="text-white-50">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>

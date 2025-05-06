@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load content_containers %}
 {% load static %}
 
 {% block title %}Contact Us | In Wilson We Trust{% endblock %}
@@ -214,6 +215,9 @@
         </div>
     </div>
 </section>
+
+{% render_content_container 'contact' %}
+
 {% endblock %}
 
 {% block extra_js %}

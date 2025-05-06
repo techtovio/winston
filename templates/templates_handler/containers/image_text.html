@@ -1,0 +1,37 @@
+<div class="container my-5">
+    {% for item in container.items.all %}
+    <div class="row align-items-center mb-4">
+        {% if item.image_position == 'left' or item.image_position == 'right' %}
+            <div class="col-md-6 {% if item.image_position == 'right' %}order-md-2{% endif %}">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.image_alt|default:'' }}" class="img-fluid rounded">
+                {% endif %}
+            </div>
+            <div class="col-md-6 {% if item.image_position == 'right' %}order-md-1{% endif %}">
+                {% if item.title %}<h2>{{ item.title }}</h2>{% endif %}
+                {{ item.content|safe }}
+                {% if item.button_text and item.button_url %}
+                <a href="{{ item.button_url }}" class="btn btn-primary mt-3">{{ item.button_text }}</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                {% if item.image_position == 'top' and item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.image_alt|default:'' }}" class="img-fluid rounded mb-3">
+                {% endif %}
+                
+                {% if item.title %}<h2>{{ item.title }}</h2>{% endif %}
+                {{ item.content|safe }}
+                
+                {% if item.image_position == 'bottom' and item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.image_alt|default:'' }}" class="img-fluid rounded mt-3">
+                {% endif %}
+                
+                {% if item.button_text and item.button_url %}
+                <a href="{{ item.button_url }}" class="btn btn-primary mt-3">{{ item.button_text }}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
