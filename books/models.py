@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import uuid
+from django.utils.text import slugify
 
 User = get_user_model()
 
@@ -11,23 +12,28 @@ class EbookCategory(models.Model):
     icon = models.CharField(max_length=50, default='fas fa-book')
     color = models.CharField(max_length=7, default='#1a56db')
 
+    
     def __str__(self):
         return self.name
 
 class Ebook(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
-    author = models.CharField(max_length=100)
     description = models.TextField()
     cover_image = models.ImageField(upload_to='ebook_covers/')
-    preview_file = models.FileField(upload_to='ebook_previews/', blank=True, null=True)
-    file = models.FileField(upload_to='ebooks/')
+    download_link = models.CharField(max_length=2000, default='https://example.com/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     pages = models.PositiveIntegerField()
     publish_date = models.DateTimeField(default=timezone.now)
     categories = models.ManyToManyField(EbookCategory)
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.title
